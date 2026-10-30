@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portal Oficial de Certificados Tributarios | Primavera Urbana</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Inter Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="/css/styles.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primavera: {
+              forest: '#234923',
+              'forest-hover': '#1a371a',
+              'forest-light': '#2f602f',
+              'forest-subtle': '#ebf3eb',
+              gold: '#C5922C',
+              'gold-light': '#DDA638',
+              'gold-subtle': '#fdf8ee',
+              ruby: '#B31F24',
+              'ruby-hover': '#961a1e',
+              'ruby-light': '#fdf2f2',
+              neutral: '#F4F7F6',
+              slate: '#3B5270',
+              'slate-dark': '#26374a',
+              'slate-light': '#e9eff5'
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="min-h-screen bg-[#F4F7F6] text-slate-800 flex flex-col justify-between">
+
+  <!-- Toast Container -->
+  <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-2.5 max-w-sm w-full pointer-events-none"></div>
+
+  <!-- ========================================== -->
+  <!-- 1. MÓDULO PÚBLICO: PORTAL DE AUTOGESTIÓN  -->
+  <!-- ========================================== -->
+  <div id="view-public" class="flex-grow flex flex-col">
+    <!-- Top Header Navigation -->
+    <header class="portal-header text-white shadow-md">
+      <div class="max-w-6xl mx-auto px-4 py-3.5 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div class="flex items-center gap-3.5">
+          <!-- Corporate Official Logo -->
+          <div class="w-16 h-16 rounded-xl bg-white p-1 border border-[#C5922C]/40 flex items-center justify-center shadow-md flex-shrink-0">
+            <img src="/logo.png" alt="Primavera Urbana Logo" class="max-h-full max-w-full object-contain">
+          </div>
+          <div>
+            <h1 class="text-sm sm:text-base font-bold tracking-tight cc-name leading-tight text-white uppercase">
+              Copropiedad Comercial Primavera Urbana
+            </h1>
+            <p class="text-xs text-[#DDA638] font-medium cc-nit">
+              NIT: 901.003.351-2 • Centro Comercial y Empresarial • Villavicencio
+            </p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <button id="btn-open-login" onclick="App.openLoginModal()" class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-white/10 hover:bg-white/20 text-white border border-[#C5922C]/50 transition shadow-sm">
+            <svg class="w-4 h-4 text-[#DDA638]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+            </svg>
+            Acceso Contabilidad (JWT)
+          </button>
+
+          <button id="btn-admin-portal" onclick="App.switchView('admin')" class="hidden inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-[#C5922C] hover:bg-[#b08124] text-white shadow-sm transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+            </svg>
+            Panel Administrativo
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Public Consultation Container -->
+    <main class="max-w-4xl mx-auto px-4 py-8 sm:py-12 w-full flex-grow">
+      <!-- Title & Subtitle Banner -->
+      <div class="text-center mb-8">
+        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold badge-gold mb-3">
+          <svg class="w-3.5 h-3.5 text-[#C5922C]" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+          Portal Oficial de Autogestión con Autenticación OTP
+        </span>
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-[#234923] tracking-tight">Certificados Tributarios</h2>
+        <p class="text-sm text-[#3B5270] mt-2 max-w-xl mx-auto font-medium">
+          Consulte y descargue de forma segura sus certificados de Retención en la Fuente (IVA, ICA, RENTA) o el Certificado de Ingresos y Retenciones (Formato 220 DIAN).
+        </p>
+      </div>
+
+      <!-- Consultation Form Card -->
+      <div class="portal-card p-6 sm:p-8 bg-white border border-slate-200 shadow-md">
+        <form id="consult-form" class="space-y-6">
+          
+          <!-- Step 1: Tipo de Tercero Selector -->
+          <div>
+            <label class="block text-xs font-bold text-[#234923] uppercase tracking-wider mb-2.5">
+              1. Seleccione el Tipo de Tercero:
+            </label>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 chip-selector">
+              <div>
+                <input type="radio" id="type-proveedor" name="tipoTercero" value="proveedor" checked class="hidden peer">
+                <label for="type-proveedor" class="flex items-center gap-3 p-4 rounded-xl border border-slate-200 cursor-pointer hover:bg-[#F4F7F6] transition">
+                  <div class="w-9 h-9 rounded-lg bg-[#ebf3eb] text-[#234923] flex items-center justify-center flex-shrink-0">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                  </div>
+                  <div>
+                    <h4 class="text-sm font-bold text-slate-900">Proveedor</h4>
+                    <p class="text-xs text-slate-500">Retención de IVA, Retención de ICA, Retención en la Fuente (RENTA)</p>
+                  </div>
+                </label>
+              </div>
+
+              <div>
+                <input type="radio" id="type-empleado" name="tipoTercero" value="empleado" class="hidden peer">
+                <label for="type-empleado" class="flex items-center gap-3 p-4 rounded-xl border border-slate-200 cursor-pointer hover:bg-[#F4F7F6] transition">
+                  <div class="w-9 h-9 rounded-lg bg-[#fdf8ee] text-[#C5922C] flex items-center justify-center flex-shrink-0">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                  </div>
+                  <div>
+                    <h4 class="text-sm font-bold text-slate-900">Empleado</h4>
+                    <p class="text-xs text-slate-500">Formato 220 - Certificado de Ingresos y Retenciones</p>
+                  </div>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 2: Identification Input -->
+          <div>
+            <label id="label-identificacion" for="consult-nit" class="block text-xs font-bold text-[#234923] uppercase tracking-wider mb-1.5">
+              2. Número de Identificación o NIT:
+            </label>
+            <div class="relative">
+              <input 
+                type="text" 
+                id="consult-nit" 
+                placeholder="Ejemplo: 900456789" 
+                required 
+                class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-[#234923] focus:border-[#234923] outline-none transition text-base font-medium text-slate-900"
+              >
+              <div class="absolute inset-y-0 right-0 pr-3.5 flex items-center pointer-events-none text-slate-400">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"/></svg>
+              </div>
+            </div>
+            <p id="help-identificacion" class="text-xs text-[#3B5270] mt-1">
+              Ingrese el NIT sin dígito de verificación ni puntos (ej. 900456789).
+            </p>
+          </div>
+
+          <!-- Step 3: Certificate Type & Year Grid -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div id="cert-type-container">
+              <label for="consult-cert-type" class="block text-xs font-bold text-[#234923] uppercase tracking-wider mb-1.5">
+                3. Tipo de Certificado:
+              </label>
+              <select id="consult-cert-type" class="w-full px-3.5 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-[#234923] focus:border-[#234923] outline-none text-sm font-medium bg-white">
+                <option value="RENTA">Retención en la Fuente (RENTA)</option>
+                <option value="IVA">Retención de IVA</option>
+                <option value="ICA">Retención de ICA</option>
+              </select>
+            </div>
+
+            <div>
+              <label for="consult-year" class="block text-xs font-bold text-[#234923] uppercase tracking-wider mb-1.5">
+                4. Año Gravable / Vigencia:
+              </label>
+              <select id="consult-year" class="w-full px-3.5 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-[#234923] focus:border-[#234923] outline-none text-sm font-medium bg-white">
+                <option value="2024">Vigencia 2024</option>
+                <option value="2025">Vigencia 2025</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Step 4: Submit Button (Solicitar Código de Verificación OTP) -->
+          <div class="pt-2">
+            <button 
+              type="submit" 
+              id="btn-submit-consult" 
+              class="w-full py-3.5 px-6 rounded-xl font-bold text-sm text-white btn-forest active:scale-[0.99] transition shadow-md flex items-center justify-center gap-2"
+            >
+              <span id="btn-consult-spinner" class="spinner hidden"></span>
+              <svg class="w-5 h-5 text-[#DDA638]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+              </svg>
+              <span id="btn-consult-text">Solicitar Código de Verificación</span>
+            </button>
+          </div>
+        </form>
+
+        <!-- Feedback Results Area -->
+        <div id="consult-feedback" class="hidden"></div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-500">
+      <div class="max-w-5xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <p>© 2026 <strong class="cc-name text-[#234923]">COPROPIEDAD COMERCIAL PRIMAVERA URBANA</strong>. Todos los derechos reservados.</p>
+        <p class="text-[#3B5270]">Cumplimiento DIAN: Art. 381 E.T. • Art. 378 E.T. (Formato 220) • Villavicencio (Meta)</p>
+      </div>
+    </footer>
+  </div>
+
+
+  <!-- ========================================== -->
+  <!-- 2. MÓDULO PRIVADO: PANEL ADMINISTRATIVO   -->
+  <!-- ========================================== -->
+  <div id="view-admin" class="hidden flex-grow flex flex-col bg-[#F4F7F6]">
+    <!-- Admin Top Navbar -->
+    <header class="admin-header text-white shadow-md">
+      <div class="max-w-7xl mx-auto px-4 py-3.5 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-lg bg-white p-0.5 border border-[#C5922C]/40 flex items-center justify-center flex-shrink-0 shadow-xs">
+            <img src="/logo.png" alt="Primavera Urbana" class="max-h-full max-w-full object-contain">
+          </div>
+          <span class="px-2.5 py-1 rounded-md text-xs font-bold bg-[#C5922C] text-white uppercase tracking-wider">
+            Administración Contable
+          </span>
+          <span class="text-sm font-semibold text-slate-100 cc-name">Primavera Urbana Centro Comercial</span>
+        </div>
+
+        <div class="flex items-center gap-4">
+          <button onclick="App.switchView('public')" class="text-xs text-slate-200 hover:text-white flex items-center gap-1.5 transition">
+            <svg class="w-4 h-4 text-[#DDA638]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+            Ver Portal Público
+          </button>
+
+          <div class="h-4 w-px bg-white/20"></div>
+
+          <div class="flex items-center gap-2 text-xs">
+            <span class="w-2 h-2 rounded-full bg-[#DDA638] animate-pulse"></span>
+            <span id="admin-user-badge" class="font-bold text-slate-200">admin</span>
+          </div>
+
+          <button onclick="App.handleLogout()" class="text-xs text-rose-300 hover:text-rose-200 font-semibold flex items-center gap-1">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+            Salir
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Admin Navigation Tabs -->
+    <div class="bg-white border-b border-slate-200">
+      <div class="max-w-7xl mx-auto px-4 flex space-x-1 sm:space-x-4 overflow-x-auto">
+        <button onclick="App.setAdminTab('upload')" data-tab="upload" class="admin-tab-btn py-3 px-3.5 text-xs sm:text-sm font-semibold border-b-2 border-[#234923] text-[#234923] bg-[#ebf3eb] transition whitespace-nowrap flex items-center gap-2">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+          Centro de Carga Masiva (Excel)
+        </button>
+
+        <button onclick="App.setAdminTab('maestro')" data-tab="maestro" class="admin-tab-btn py-3 px-3.5 text-xs sm:text-sm font-semibold border-b-2 border-transparent text-slate-600 hover:text-[#234923] transition whitespace-nowrap flex items-center gap-2">
+          <svg class="w-4 h-4 text-[#C5922C]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+          </svg>
+          Maestro de Terceros (OTP)
+        </button>
+
+        <button onclick="App.setAdminTab('dashboard')" data-tab="dashboard" class="admin-tab-btn py-3 px-3.5 text-xs sm:text-sm font-semibold border-b-2 border-transparent text-slate-600 hover:text-[#234923] transition whitespace-nowrap flex items-center gap-2">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+          Métricas & Resumen
+        </button>
+
+        <button onclick="App.setAdminTab('config')" data-tab="config" class="admin-tab-btn py-3 px-3.5 text-xs sm:text-sm font-semibold border-b-2 border-transparent text-slate-600 hover:text-[#234923] transition whitespace-nowrap flex items-center gap-2">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+          Agente Retenedor & Firma
+        </button>
+
+        <button onclick="App.setAdminTab('dates')" data-tab="dates" class="admin-tab-btn py-3 px-3.5 text-xs sm:text-sm font-semibold border-b-2 border-transparent text-slate-600 hover:text-[#234923] transition whitespace-nowrap flex items-center gap-2">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+          Fechas de Expedición
+        </button>
+
+        <button onclick="App.setAdminTab('records')" data-tab="records" class="admin-tab-btn py-3 px-3.5 text-xs sm:text-sm font-semibold border-b-2 border-transparent text-slate-600 hover:text-[#234923] transition whitespace-nowrap flex items-center gap-2">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>
+          Explorador de Datos
+        </button>
+      </div>
+    </div>
+
+    <!-- Admin Content Area -->
+    <main class="max-w-7xl mx-auto px-4 py-8 w-full flex-grow">
+      
+      <!-- TAB 1: Carga Masiva (Excel Upload) -->
+      <section id="tab-content-upload" class="admin-tab-content">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          
+          <!-- Upload Form Box (2 cols) -->
+          <div class="lg:col-span-2 portal-card p-6 bg-white border border-slate-200">
+            <h3 class="text-base font-bold text-[#234923] mb-1 flex items-center gap-2">
+              <svg class="w-5 h-5 text-[#C5922C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
+              Carga Masiva de Archivos Excel
+            </h3>
+            <p class="text-xs text-[#3B5270] mb-6">
+              El sistema procesa y valida automáticamente las columnas requeridas, aplica la regla de negocio para almacenar y consolidar valores positivos absolutos (BASE y VALOR), y persiste los registros por vigencia fiscal.
+            </p>
+
+            <form onsubmit="App.handleExcelUploadSubmit(event)" class="space-y-5">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label for="upload-category" class="block text-xs font-bold text-[#234923] uppercase tracking-wider mb-1.5">
+                    Categoría del Archivo:
+                  </label>
+                  <select id="upload-category" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-sm font-medium bg-white outline-none focus:ring-2 focus:ring-[#234923]">
+                    <option value="retenciones">Retenciones Tributarias (Proveedores - 8 columnas)</option>
+                    <option value="formulario220">Formulario 220 (Empleados - 42 columnas exactas)</option>
+                    <option value="maestro">Maestro de Terceros (Directorio con Correos OTP)</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label for="upload-year" class="block text-xs font-bold text-[#234923] uppercase tracking-wider mb-1.5">
+                    Año Fiscal / Vigencia:
+                  </label>
+                  <input type="number" id="upload-year" value="2024" min="2020" max="2030" required class="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-sm font-medium outline-none focus:ring-2 focus:ring-[#234923]">
+                </div>
+              </div>
+
+              <!-- Dropzone -->
+              <div id="excel-dropzone" class="border-2 border-dashed border-slate-300 hover:border-[#234923] rounded-2xl p-8 text-center bg-[#F4F7F6]/60 cursor-pointer transition">
+                <input type="file" id="excel-file-input" accept=".xlsx, .xls" class="hidden">
+                <label for="excel-file-input" class="cursor-pointer">
+                  <div class="w-12 h-12 rounded-full bg-[#ebf3eb] text-[#234923] mx-auto flex items-center justify-center mb-3">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                  </div>
+                  <h4 class="text-sm font-bold text-slate-800">Haga clic para seleccionar o arrastre su archivo Excel aquí</h4>
+                  <p class="text-xs text-slate-500 mt-1">Formatos admitidos: .xlsx o .xls (hasta 25 MB)</p>
+                  <div id="selected-file-name" class="hidden mt-3 inline-block px-3 py-1 rounded-lg bg-[#ebf3eb] text-[#234923] font-bold text-xs border border-[#234923]/30"></div>
+                </label>
+              </div>
+
+              <button type="submit" id="btn-upload-excel" class="w-full py-3 px-5 rounded-xl font-bold text-sm text-white btn-forest transition shadow flex items-center justify-center">
+                Subir y Procesar Archivo
+              </button>
+            </form>
+
+            <div id="upload-result" class="hidden"></div>
+          </div>
+
+          <!-- Templates Download Side Card (1 col) -->
+          <div class="space-y-4">
+            <div class="portal-card p-5 bg-white border border-[#C5922C]/40">
+              <h4 class="text-sm font-bold text-[#234923] mb-1 flex items-center gap-1.5">
+                <svg class="w-4 h-4 text-[#C5922C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                Plantillas Oficiales de Excel
+              </h4>
+              <p class="text-xs text-[#3B5270] mb-4">
+                Descargue las plantillas con el formato y encabezados exactos para evitar errores de validación.
+              </p>
+
+              <div class="space-y-2.5">
+                <a href="/api/admin/download-template/retenciones" onclick="App.downloadTemplate(event, 'retenciones')" download="Plantilla_Retenciones_Proveedores.xlsx" class="w-full flex items-center justify-between p-3 rounded-xl bg-white border border-slate-200 hover:border-[#234923] hover:bg-[#ebf3eb]/40 transition text-xs font-semibold text-slate-800 shadow-2xs cursor-pointer">
+                  <span class="flex items-center gap-2">📥 Plantilla Proveedores (8 columnas)</span>
+                  <span class="text-[10px] bg-[#ebf3eb] text-[#234923] px-2 py-0.5 rounded font-bold border border-[#234923]/20">.XLSX</span>
+                </a>
+
+                <a href="/api/admin/download-template/formulario220" onclick="App.downloadTemplate(event, 'formulario220')" download="Plantilla_Formulario_220_Empleados.xlsx" class="w-full flex items-center justify-between p-3 rounded-xl bg-white border border-slate-200 hover:border-[#C5922C] hover:bg-[#fdf8ee]/60 transition text-xs font-semibold text-slate-800 shadow-2xs cursor-pointer">
+                  <span class="flex items-center gap-2">📥 Plantilla Formulario 220 (42 columnas)</span>
+                  <span class="text-[10px] bg-[#fdf8ee] text-[#946914] px-2 py-0.5 rounded font-bold border border-[#C5922C]/30">.XLSX</span>
+                </a>
+
+                <a href="/api/admin/download-template/maestro-terceros" onclick="App.downloadTemplate(event, 'maestro-terceros')" download="Plantilla_Maestro_Terceros.xlsx" class="w-full flex items-center justify-between p-3 rounded-xl bg-white border border-slate-200 hover:border-[#234923] hover:bg-[#ebf3eb]/50 transition text-xs font-semibold text-slate-800 shadow-2xs cursor-pointer">
+                  <span class="flex items-center gap-2">📥 Plantilla Maestro Terceros (4 columnas OTP)</span>
+                  <span class="text-[10px] bg-[#ebf3eb] text-[#234923] px-2 py-0.5 rounded font-bold border border-[#234923]/20">.XLSX</span>
+                </a>
+              </div>
+            </div>
+
+            <div class="portal-card p-5 text-xs text-slate-600 space-y-2 bg-white">
+              <h5 class="font-bold text-[#234923]">Reglas de negocio y procesamiento automático:</h5>
+              <ul class="list-disc pl-4 space-y-1 text-slate-600">
+                <li><strong>Valor absoluto:</strong> BASE y VALOR se convierten siempre en positivos (+).</li>
+                <li>Limpieza automática de espacios en blanco, puntos y guiones en números de NIT.</li>
+                <li>Conversión de valores monetarios con formato COP, comas o símbolos a número limpio.</li>
+                <li>Consolidación automática por NIT, concepto y cuenta contable.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB: Maestro de Terceros (Módulo Nuevo con Correos OTP) -->
+      <section id="tab-content-maestro" class="admin-tab-content hidden space-y-6">
+        <!-- Maestro Stats Cards -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          <div class="portal-card p-5 bg-white border border-slate-200">
+            <span class="text-xs font-bold text-[#3B5270] uppercase tracking-wider">Total en Directorio</span>
+            <div id="stat-maestro-total" class="text-2xl font-black text-[#234923] mt-1">0</div>
+            <span class="text-[11px] text-slate-500 font-medium">Terceros registrados</span>
+          </div>
+
+          <div class="portal-card p-5 bg-white border border-slate-200">
+            <span class="text-xs font-bold text-[#3B5270] uppercase tracking-wider">Con Correo Electrónico</span>
+            <div id="stat-maestro-email" class="text-2xl font-black text-[#C5922C] mt-1">0</div>
+            <span class="text-[11px] text-emerald-600 font-medium">Habilitados para OTP</span>
+          </div>
+
+          <div class="portal-card p-5 bg-white border border-slate-200">
+            <span class="text-xs font-bold text-[#3B5270] uppercase tracking-wider">Proveedores</span>
+            <div id="stat-maestro-prov" class="text-2xl font-black text-[#234923] mt-1">0</div>
+            <span class="text-[11px] text-slate-500">Personas jurídicas y naturales</span>
+          </div>
+
+          <div class="portal-card p-5 bg-white border border-slate-200">
+            <span class="text-xs font-bold text-[#3B5270] uppercase tracking-wider">Empleados</span>
+            <div id="stat-maestro-emp" class="text-2xl font-black text-[#C5922C] mt-1">0</div>
+            <span class="text-[11px] text-slate-500">Colaboradores vinculados</span>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <!-- Carga Masiva de Maestro de Terceros (2 cols) -->
+          <div class="lg:col-span-2 portal-card p-6 bg-white border border-slate-200">
+            <div class="flex items-center justify-between mb-2">
+              <h3 class="text-base font-bold text-[#234923] flex items-center gap-2">
+                <svg class="w-5 h-5 text-[#C5922C]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                </svg>
+                Carga Masiva del Maestro de Terceros (Excel / CSV)
+              </h3>
+              <a href="/api/admin/download-template/maestro-terceros" onclick="App.downloadTemplate(event, 'maestro-terceros')" download="Plantilla_Maestro_Terceros.xlsx" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#ebf3eb] text-[#234923] hover:bg-[#d8ebd8] border border-[#234923]/30 text-xs font-bold transition shadow-2xs">
+                📥 Descargar Plantilla
+              </a>
+            </div>
+            <p class="text-xs text-[#3B5270] mb-5">
+              Cargue el directorio maestro mediante archivos Excel o CSV con las columnas oficiales: 
+              <strong class="text-slate-800">NIT, Razón Social / Nombre, Correo Electrónico y Tipo de Tercero</strong>. Estos correos son utilizados para la autenticación OTP.
+            </p>
+
+            <form onsubmit="App.handleMaestroUploadSubmit(event)" class="space-y-4">
+              <!-- Dropzone Maestro -->
+              <div id="maestro-dropzone" class="border-2 border-dashed border-slate-300 hover:border-[#234923] rounded-2xl p-6 text-center bg-[#F4F7F6]/60 cursor-pointer transition">
+                <input type="file" id="maestro-file-input" accept=".xlsx, .xls, .csv" class="hidden">
+                <label for="maestro-file-input" class="cursor-pointer">
+                  <div class="w-10 h-10 rounded-full bg-[#ebf3eb] text-[#234923] mx-auto flex items-center justify-center mb-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                  </div>
+                  <h4 class="text-xs font-bold text-slate-800">Seleccione o arrastre su archivo de Maestro de Terceros (.xlsx, .xls, .csv)</h4>
+                  <div id="maestro-selected-file-name" class="hidden mt-2 inline-block px-3 py-1 rounded-lg bg-[#ebf3eb] text-[#234923] font-bold text-xs border border-[#234923]/30"></div>
+                </label>
+              </div>
+
+              <button type="submit" id="btn-upload-maestro" class="w-full py-2.5 px-4 rounded-xl font-bold text-xs text-white btn-forest transition shadow flex items-center justify-center">
+                Subir y Actualizar Maestro de Terceros
+              </button>
+            </form>
+          </div>
+
+          <!-- Registro Individual de Tercero (1 col) -->
+          <div class="portal-card p-6 bg-white border border-slate-200">
+            <h4 class="text-sm font-bold text-[#234923] mb-1 flex items-center gap-1.5">
+              <svg class="w-4 h-4 text-[#C5922C]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+              </svg>
+              Registrar / Editar Tercero
+            </h4>
+            <p class="text-xs text-[#3B5270] mb-4">
+              Agregue o modifique un tercero individualmente en la base de datos.
+            </p>
+
+            <form onsubmit="App.handleSaveSingleTercero(event)" class="space-y-3">
+              <div>
+                <label class="block text-[11px] font-bold text-[#234923] uppercase mb-1">NIT / Cédula:</label>
+                <input type="text" id="m-nit" placeholder="Ej: 900456789" required class="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-[#234923] outline-none">
+              </div>
+
+              <div>
+                <label class="block text-[11px] font-bold text-[#234923] uppercase mb-1">Razón Social / Nombre:</label>
+                <input type="text" id="m-nombre" placeholder="Nombre completo o Razón social" required class="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-[#234923] outline-none">
+              </div>
+
+              <div>
+                <label class="block text-[11px] font-bold text-[#234923] uppercase mb-1">Correo Electrónico (OTP):</label>
+                <input type="email" id="m-email" placeholder="usuario@correo.com" required class="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-[#234923] outline-none">
+              </div>
+
+              <div>
+                <label class="block text-[11px] font-bold text-[#234923] uppercase mb-1">Tipo de Tercero:</label>
+                <select id="m-tipo" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs bg-white focus:ring-2 focus:ring-[#234923] outline-none">
+                  <option value="proveedor">Proveedor</option>
+                  <option value="empleado">Empleado</option>
+                  <option value="ambos">Ambos (Proveedor y Empleado)</option>
+                </select>
+              </div>
+
+              <button type="submit" class="w-full py-2 btn-forest text-white rounded-lg text-xs font-bold transition shadow-xs mt-2">
+                Guardar en Maestro
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Tabla Exploradora del Maestro -->
+        <div class="portal-card p-5 bg-white border border-slate-200 space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-4">
+            <div class="flex flex-wrap items-center gap-3">
+              <input type="text" id="maestro-search" placeholder="Buscar por NIT, Nombre o Correo..." oninput="App.loadMaestroTerceros()" class="w-64 px-3 py-2 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-[#234923] outline-none">
+
+              <select id="maestro-tipo-filter" onchange="App.loadMaestroTerceros()" class="px-3 py-2 rounded-lg border border-slate-300 text-xs font-semibold bg-white focus:ring-2 focus:ring-[#234923] outline-none">
+                <option value="todos">Todos los Tipos</option>
+                <option value="proveedor">Solo Proveedores</option>
+                <option value="empleado">Solo Empleados</option>
+              </select>
+            </div>
+
+            <div class="flex items-center gap-3">
+              <span id="maestro-total-counter" class="text-xs text-[#3B5270] font-semibold">Terceros: 0</span>
+              <button onclick="App.handleClearMaestro()" class="px-3 py-1.5 rounded-lg btn-ruby text-white text-xs font-bold transition shadow-xs">
+                🗑️ Vaciar Maestro
+              </button>
+            </div>
+          </div>
+
+          <div class="overflow-x-auto border border-slate-200 rounded-xl">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-[#F4F7F6] text-[#234923] uppercase tracking-wider border-b border-slate-200">
+                <tr>
+                  <th class="p-3">NIT / Cédula</th>
+                  <th class="p-3">Razón Social / Nombre</th>
+                  <th class="p-3">Correo Electrónico (OTP)</th>
+                  <th class="p-3">Tipo</th>
+                  <th class="p-3 text-right">Acción</th>
+                </tr>
+              </thead>
+              <tbody id="maestro-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 2: Dashboard & Métricas -->
+      <section id="tab-content-dashboard" class="admin-tab-content hidden space-y-6">
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          <div class="portal-card p-5 bg-white border border-slate-200">
+            <span class="text-xs font-bold text-[#3B5270] uppercase tracking-wider">Registros Retenciones</span>
+            <div id="stat-retenciones" class="text-2xl font-black text-[#234923] mt-1">0</div>
+            <span class="text-[11px] text-slate-500 font-medium">Líneas de retención procesadas</span>
+          </div>
+
+          <div class="portal-card p-5 bg-white border border-slate-200">
+            <span class="text-xs font-bold text-[#3B5270] uppercase tracking-wider">Proveedores Únicos</span>
+            <div id="stat-proveedores" class="text-2xl font-black text-[#C5922C] mt-1">0</div>
+            <span class="text-[11px] text-slate-500">Terceros con certificados activos</span>
+          </div>
+
+          <div class="portal-card p-5 bg-white border border-slate-200">
+            <span class="text-xs font-bold text-[#3B5270] uppercase tracking-wider">Certificados Formulario 220</span>
+            <div id="stat-f220" class="text-2xl font-black text-[#234923] mt-1">0</div>
+            <span class="text-[11px] text-slate-500 font-medium">Registros de empleados</span>
+          </div>
+
+          <div class="portal-card p-5 bg-white border border-slate-200">
+            <span class="text-xs font-bold text-[#3B5270] uppercase tracking-wider">Empleados Únicos</span>
+            <div id="stat-empleados" class="text-2xl font-black text-[#C5922C] mt-1">0</div>
+            <span class="text-[11px] text-slate-500">Colaboradores registrados</span>
+          </div>
+        </div>
+
+        <div class="portal-card p-6 bg-white border border-slate-200">
+          <h3 class="text-sm font-bold text-[#234923] mb-3">Desglose por Vigencias Fiscales Cargadas</h3>
+          <div id="dashboard-years-list" class="space-y-2"></div>
+        </div>
+      </section>
+
+      <!-- TAB 3: Agente Retenedor Config -->
+      <section id="tab-content-config" class="admin-tab-content hidden">
+        <div class="max-w-4xl mx-auto portal-card p-6 sm:p-8 bg-white border border-slate-200">
+          <div class="flex items-center justify-between border-b border-slate-200 pb-4 mb-6">
+            <div>
+              <h3 class="text-base font-bold text-[#234923]">Configuración del Agente Retenedor</h3>
+              <p class="text-xs text-[#3B5270]">Información institucional oficial de la copropiedad que encabeza los certificados generados en PDF.</p>
+            </div>
+            <span class="px-2.5 py-1 rounded badge-gold text-xs font-bold font-mono">Art. 381 E.T.</span>
+          </div>
+
+          <form onsubmit="App.handleConfigSubmit(event)" class="space-y-5">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div class="sm:col-span-2">
+                <label class="block text-xs font-bold text-[#234923] uppercase tracking-wider mb-1">Nombre / Razón Social:</label>
+                <input type="text" id="cfg-razonSocial" required class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm font-medium focus:ring-2 focus:ring-[#234923] outline-none">
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-[#234923] uppercase tracking-wider mb-1">NIT y Dígito (DV):</label>
+                <div class="flex gap-2">
+                  <input type="text" id="cfg-nit" placeholder="901003351" required class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm font-medium focus:ring-2 focus:ring-[#234923] outline-none">
+                  <input type="text" id="cfg-dv" placeholder="2" maxlength="1" required class="w-12 px-2 py-2 rounded-lg border border-slate-300 text-sm font-bold text-center focus:ring-2 focus:ring-[#234923] outline-none">
+                </div>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div>
+                <label class="block text-xs font-bold text-[#234923] uppercase tracking-wider mb-1">Dirección:</label>
+                <input type="text" id="cfg-direccion" required class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm font-medium focus:ring-2 focus:ring-[#234923] outline-none">
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-[#234923] uppercase tracking-wider mb-1">Municipio / Ciudad:</label>
+                <input type="text" id="cfg-ciudad" required class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm font-medium focus:ring-2 focus:ring-[#234923] outline-none">
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-[#234923] uppercase tracking-wider mb-1">Departamento:</label>
+                <input type="text" id="cfg-departamento" required class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm font-medium focus:ring-2 focus:ring-[#234923] outline-none">
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-bold text-[#234923] uppercase tracking-wider mb-1">Teléfonos de Contacto:</label>
+                <input type="text" id="cfg-telefono" required class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm font-medium focus:ring-2 focus:ring-[#234923] outline-none">
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-[#234923] uppercase tracking-wider mb-1">Correo Electrónico:</label>
+                <input type="email" id="cfg-email" required class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm font-medium focus:ring-2 focus:ring-[#234923] outline-none">
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 border-t border-slate-200 pt-4">
+              <div>
+                <label class="block text-xs font-bold text-[#234923] uppercase tracking-wider mb-1">Representante Legal / Administrador:</label>
+                <input type="text" id="cfg-representanteLegal" required class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm font-medium focus:ring-2 focus:ring-[#234923] outline-none">
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-[#234923] uppercase tracking-wider mb-1">Cargo Representante:</label>
+                <input type="text" id="cfg-cargoRepresentante" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm font-medium focus:ring-2 focus:ring-[#234923] outline-none">
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-bold text-[#234923] uppercase tracking-wider mb-1">Contador Público:</label>
+                <input type="text" id="cfg-contador" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm font-medium focus:ring-2 focus:ring-[#234923] outline-none">
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-[#234923] uppercase tracking-wider mb-1">Tarjeta Profesional:</label>
+                <input type="text" id="cfg-tarjetaProfesional" placeholder="T.P. 184592-T" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm font-medium focus:ring-2 focus:ring-[#234923] outline-none">
+              </div>
+            </div>
+
+            <!-- Google Workspace SMTP Configuration for OTP Emails -->
+            <div class="border-t border-slate-200 pt-4">
+              <div class="flex items-center justify-between mb-1">
+                <h4 class="text-xs font-bold text-[#234923] uppercase tracking-wider flex items-center gap-1.5">
+                  <svg class="w-4 h-4 text-[#C5922C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                  Servicio de Emailing Transaccional (Google Workspace)
+                </h4>
+                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-[#ebf3eb] text-[#234923] border border-[#234923]/20">
+                  <svg class="w-2.5 h-2.5 text-[#234923]" fill="currentColor" viewBox="0 0 8 8"><circle cx="4" cy="4" r="3"/></svg>
+                  primaveraurbana.com.co
+                </span>
+              </div>
+              <p class="text-[11px] text-[#3B5270] mb-3">
+                Envío oficial de códigos de autenticación OTP mediante <strong>Google Workspace SMTP</strong> (<span class="font-mono">smtp.gmail.com:465 SSL</span>) desde la cuenta corporativa autorizada.
+              </p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-3">
+                <div>
+                  <label class="block text-xs font-bold text-[#234923] uppercase tracking-wider mb-1">Correo Remitente Emisor:</label>
+                  <input type="email" id="cfg-gworkspaceEmail" value="contabilidad@primaveraurbana.com.co" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs font-medium focus:ring-2 focus:ring-[#234923] outline-none">
+                  <span class="text-[10px] text-slate-500">Cuenta oficial: contabilidad@primaveraurbana.com.co</span>
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-[#234923] uppercase tracking-wider mb-1">Contraseña de Aplicación (Google Workspace):</label>
+                  <input type="password" id="cfg-gworkspaceAppPassword" placeholder="•••• •••• •••• •••• (16 caracteres)" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs font-mono focus:ring-2 focus:ring-[#234923] outline-none">
+                  <span class="text-[10px] text-slate-500">Generada en Cuenta Google &gt; Seguridad &gt; Contraseñas de aplicaciones. Dejar vacío para modo demo.</span>
+                </div>
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-xs font-bold text-[#234923] uppercase tracking-wider mb-1">Servidor SMTP Host:</label>
+                  <input type="text" id="cfg-gworkspaceSmtpHost" value="smtp.gmail.com" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs font-mono bg-slate-50 focus:ring-2 focus:ring-[#234923] outline-none">
+                  <span class="text-[10px] text-slate-500">Predeterminado: smtp.gmail.com</span>
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-[#234923] uppercase tracking-wider mb-1">Puerto SMTP (SSL):</label>
+                  <input type="number" id="cfg-gworkspaceSmtpPort" value="465" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs font-mono bg-slate-50 focus:ring-2 focus:ring-[#234923] outline-none">
+                  <span class="text-[10px] text-slate-500">Predeterminado: 465 (SSL/TLS Seguro)</span>
+                </div>
+              </div>
+
+              <!-- Test Connection Box -->
+              <div class="mt-4 p-3.5 bg-slate-50 rounded-xl border border-slate-200">
+                <span class="text-xs font-bold text-[#234923] flex items-center gap-1.5 mb-1">
+                  <svg class="w-4 h-4 text-[#C5922C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                  Probar Envío Real con Google Workspace
+                </span>
+                <p class="text-[11px] text-[#3B5270] mb-2.5">
+                  Comprueba de inmediato que la Contraseña de Aplicación funcione enviando un correo de prueba real desde <strong>contabilidad@primaveraurbana.com.co</strong>.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-2">
+                  <input type="email" id="test-recipient-email" placeholder="Correo para recibir prueba (ej: su-correo@dominio.com)" class="flex-grow px-3 py-2 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-[#234923] outline-none bg-white">
+                  <button type="button" onclick="App.handleTestEmail()" id="btn-test-email" class="px-4 py-2 bg-[#234923] hover:bg-[#1b381b] text-white rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition shrink-0 shadow-xs">
+                    <span id="spinner-test-email" class="spinner hidden"></span>
+                    <svg class="w-3.5 h-3.5 text-[#DDA638]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+                    <span>Enviar Prueba</span>
+                  </button>
+                </div>
+                <div id="test-email-result" class="hidden mt-2 p-2.5 rounded-lg text-xs leading-relaxed font-medium"></div>
+              </div>
+            </div>
+
+            <!-- Signature and Logo upload -->
+            <div class="border-t border-slate-200 pt-4 grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div>
+                <label class="block text-xs font-bold text-[#234923] uppercase tracking-wider mb-2">Firma Digital (.png sin fondo):</label>
+                <div class="flex items-center gap-3">
+                  <input type="file" id="cfg-signature-file" accept="image/png, image/jpeg" onchange="App.handleSignatureUpload(event)" class="text-xs text-slate-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-[#ebf3eb] file:text-[#234923] hover:file:bg-[#d8ebd8]">
+                  <div class="h-14 w-36 border border-slate-200 rounded-lg flex items-center justify-center p-1 bg-[#F4F7F6]">
+                    <img id="signature-preview" src="" alt="Firma Digital" class="max-h-full max-w-full object-contain hidden">
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-[#234923] uppercase tracking-wider mb-2">Logotipo Corporativo (PNG):</label>
+                <div class="flex items-center gap-3">
+                  <input type="file" id="cfg-logo-file" accept="image/png, image/jpeg" onchange="App.handleLogoUpload(event)" class="text-xs text-slate-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-[#fdf8ee] file:text-[#C5922C] hover:file:bg-[#fcf3dc]">
+                  <div class="h-14 w-28 border border-slate-200 rounded-lg flex items-center justify-center p-1 bg-[#F4F7F6]">
+                    <img id="logo-preview" src="" alt="Logotipo" class="max-h-full max-w-full object-contain hidden">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="pt-3">
+              <button type="submit" class="px-6 py-2.5 btn-forest text-white rounded-xl text-xs font-bold transition shadow">
+                Guardar Configuración Institucional
+              </button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <!-- TAB 4: Fechas de Expedición -->
+      <section id="tab-content-dates" class="admin-tab-content hidden space-y-6">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div class="portal-card p-6 bg-white border border-slate-200">
+            <h3 class="text-sm font-bold text-[#234923] mb-3">Definir Fecha de Expedición Legal</h3>
+            <form onsubmit="App.handleSaveIssuanceDate(event)" class="space-y-4">
+              <div>
+                <label class="block text-xs font-bold text-[#234923] uppercase tracking-wider mb-1">Vigencia / Año:</label>
+                <input type="number" id="date-year" value="2024" min="2020" max="2030" required class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm focus:ring-2 focus:ring-[#234923] outline-none">
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-[#234923] uppercase tracking-wider mb-1">Tipo de Certificado:</label>
+                <select id="date-type" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm bg-white focus:ring-2 focus:ring-[#234923] outline-none">
+                  <option value="RENTA">RENTA (Retención en la Fuente)</option>
+                  <option value="IVA">IVA (Retención IVA)</option>
+                  <option value="ICA">ICA (Retención ICA)</option>
+                  <option value="F220">Formulario 220 (Ingresos y Retenciones)</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-[#234923] uppercase tracking-wider mb-1">Fecha Oficial de Expedición:</label>
+                <input type="text" id="date-str" placeholder="Ej: 15 de marzo de 2025" required class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm focus:ring-2 focus:ring-[#234923] outline-none">
+                <span class="text-[11px] text-[#3B5270] mt-1 block">Aparecerá en el encabezado oficial del PDF generado.</span>
+              </div>
+
+              <button type="submit" class="w-full py-2.5 btn-forest text-white rounded-xl text-xs font-bold transition shadow">
+                Guardar Fecha de Expedición
+              </button>
+            </form>
+          </div>
+
+          <div class="lg:col-span-2 portal-card p-6 bg-white border border-slate-200">
+            <h3 class="text-sm font-bold text-[#234923] mb-3">Fechas de Expedición Configuradas</h3>
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs">
+                <thead>
+                  <tr class="border-b border-slate-200 text-slate-500 uppercase tracking-wider">
+                    <th class="p-3">Año</th>
+                    <th class="p-3">Tipo</th>
+                    <th class="p-3">Fecha Oficial</th>
+                    <th class="p-3 text-right">Acción</th>
+                  </tr>
+                </thead>
+                <tbody id="dates-table-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 5: Explorador de Registros -->
+      <section id="tab-content-records" class="admin-tab-content hidden space-y-4">
+        <div class="portal-card p-5 bg-white border border-slate-200 flex flex-wrap items-center justify-between gap-4">
+          <div class="flex flex-wrap items-center gap-3">
+            <select id="records-category" onchange="App.loadAdminRecords()" class="px-3 py-2 rounded-lg border border-slate-300 text-xs font-bold bg-white focus:ring-2 focus:ring-[#234923] outline-none">
+              <option value="retenciones">Retenciones Tributarias (Proveedores)</option>
+              <option value="formulario220">Formulario 220 (Empleados)</option>
+            </select>
+
+            <input type="number" id="records-year" placeholder="Año (ej: 2024)" onchange="App.loadAdminRecords()" class="w-28 px-3 py-2 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-[#234923] outline-none">
+
+            <input type="text" id="records-nit-search" placeholder="Filtrar por NIT o Cédula..." oninput="App.loadAdminRecords()" class="w-48 px-3 py-2 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-[#234923] outline-none">
+          </div>
+
+          <div class="flex items-center gap-3">
+            <span id="records-total-count" class="text-xs text-[#3B5270] font-semibold">Total registros: 0</span>
+            <button onclick="App.handleDeleteRecordsYear()" class="px-3 py-1.5 rounded-lg btn-ruby text-white text-xs font-bold transition shadow-xs">
+              🗑️ Limpiar Vigencia
+            </button>
+          </div>
+        </div>
+
+        <div class="portal-card overflow-hidden bg-white border border-slate-200">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left">
+              <thead id="records-table-head" class="bg-[#F4F7F6] border-b border-slate-200 text-xs text-[#234923] uppercase tracking-wider"></thead>
+              <tbody id="records-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+
+  <!-- ========================================== -->
+  <!-- 2. MODAL DE VALIDACIÓN OTP (SEGURIDAD)     -->
+  <!-- ========================================== -->
+  <div id="modal-otp" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs">
+    <div class="portal-card max-w-md w-full p-6 sm:p-8 bg-white shadow-2xl relative border-t-4 border-[#234923]">
+      <button onclick="App.closeOtpModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 transition">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+
+      <div class="text-center mb-5">
+        <div class="w-14 h-14 rounded-2xl bg-[#ebf3eb] text-[#234923] mx-auto flex items-center justify-center mb-3 shadow-inner">
+          <svg class="w-7 h-7 text-[#234923]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+          </svg>
+        </div>
+        <h3 class="text-lg font-bold text-[#234923]">Autenticación de Seguridad OTP</h3>
+        <p class="text-xs text-[#3B5270] mt-1.5 leading-relaxed">
+          Hemos enviado un código de verificación de 6 dígitos a su correo electrónico registrado:
+        </p>
+        <div class="mt-2 inline-block px-3 py-1 rounded-lg bg-[#F4F7F6] border border-slate-200">
+          <span id="otp-masked-email" class="font-bold text-xs text-[#234923] tracking-wide">m***a@gmail.com</span>
+        </div>
+      </div>
+
+      <!-- Expiration Badge / Countdown -->
+      <div class="flex items-center justify-center mb-5">
+        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-[#fdf8ee] text-[#C5922C] border border-[#C5922C]/30">
+          <svg class="w-3.5 h-3.5 animate-pulse text-[#C5922C]" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/></svg>
+          Código válido por: <strong id="otp-countdown" class="font-mono text-sm text-[#946914] ml-1">10:00</strong> min
+        </span>
+      </div>
+
+      <!-- OTP Input Form -->
+      <form id="otp-form" onsubmit="App.handleVerifyOtpSubmit(event)" class="space-y-4">
+        <div>
+          <label for="otp-code-input" class="block text-center text-xs font-bold text-[#234923] uppercase tracking-wider mb-2">
+            Ingrese el Código de 6 Dígitos:
+          </label>
+          <input 
+            type="text" 
+            id="otp-code-input" 
+            maxlength="6" 
+            autocomplete="one-time-code" 
+            inputmode="numeric" 
+            pattern="[0-9]*" 
+            placeholder="• • • • • •" 
+            required 
+            class="w-full text-center tracking-[12px] text-2xl sm:text-3xl font-black font-mono py-3 rounded-xl border-2 border-slate-300 focus:border-[#234923] focus:ring-4 focus:ring-[#234923]/15 outline-none text-[#234923] bg-white transition shadow-inner"
+          >
+        </div>
+
+        <button 
+          type="submit" 
+          id="btn-verify-otp" 
+          class="w-full py-3.5 btn-forest text-white rounded-xl text-xs font-bold transition shadow-md flex items-center justify-center gap-2"
+        >
+          <span id="btn-otp-spinner" class="spinner hidden"></span>
+          <svg class="w-4 h-4 text-[#DDA638]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          <span id="btn-otp-text">Validar Código y Descargar PDF</span>
+        </button>
+
+        <div class="flex items-center justify-between text-xs pt-1 text-slate-500">
+          <button type="button" onclick="App.handleResendOtp()" class="text-[#C5922C] hover:text-[#946914] font-semibold underline transition">
+            ¿No llegó el código? Reenviar
+          </button>
+          <button type="button" onclick="App.closeOtpModal()" class="text-slate-400 hover:text-slate-600 transition">
+            Cancelar
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- 3. MODAL DE LOGIN (ADMINISTRACIÓN)         -->
+  <!-- ========================================== -->
+  <div id="modal-login" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs">
+    <div class="portal-card max-w-md w-full p-6 sm:p-8 bg-white shadow-2xl relative border-t-4 border-[#234923]">
+      <button onclick="App.closeLoginModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+
+      <div class="text-center mb-6">
+        <div class="w-12 h-12 rounded-xl bg-[#ebf3eb] text-[#234923] mx-auto flex items-center justify-center mb-3">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+        </div>
+        <h3 class="text-lg font-bold text-[#234923]">Acceso al Panel Contable</h3>
+        <p class="text-xs text-[#3B5270] mt-1">Primavera Urbana Centro Comercial y Empresarial</p>
+        <span class="inline-block mt-2 px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-[#ebf3eb] text-[#234923] border border-[#234923]/20">
+          🔒 Autenticación Segura (JWT / NextAuth Compatible)
+        </span>
+      </div>
+
+      <form id="login-form" class="space-y-4">
+        <div>
+          <label class="block text-xs font-bold text-[#234923] uppercase tracking-wider mb-1">Usuario:</label>
+          <input type="text" id="login-username" value="admin" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-[#234923] outline-none">
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-[#234923] uppercase tracking-wider mb-1">Contraseña:</label>
+          <input type="password" id="login-password" value="admin1234" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-[#234923] outline-none">
+        </div>
+
+        <button type="submit" class="w-full py-3 btn-forest text-white rounded-xl text-xs font-bold transition shadow-md">
+          Iniciar Sesión
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="/js/api.js"></script>
+  <script src="/js/app.js"></script>
+</body>
+</html>

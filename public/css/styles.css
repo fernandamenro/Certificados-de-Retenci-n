@@ -1,0 +1,130 @@
+/* Estilos Oficiales - Copropiedad Comercial Primavera Urbana Centro Comercial y Empresarial */
+
+:root {
+  --forest-primary: #234923;
+  --forest-dark: #183318;
+  --forest-light: #2e5c2e;
+  --gold-accent: #C5922C;
+  --gold-light: #DDA638;
+  --gold-subtle: #fcf9f2;
+  --ruby-alert: #B31F24;
+  --ruby-hover: #961a1e;
+  --ruby-light: #fef2f2;
+  --neutral-bg: #F4F7F6;
+  --compl-slate: #3B5270;
+  --compl-slate-light: #eef3f7;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background-color: var(--neutral-bg);
+  color: #1e293b;
+}
+
+/* Glassmorphism & premium card effects */
+.portal-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 10px 25px -5px rgba(35, 73, 35, 0.05), 0 8px 10px -6px rgba(35, 73, 35, 0.03);
+  border-radius: 1rem;
+}
+
+.portal-header {
+  background: linear-gradient(135deg, #183318 0%, #234923 60%, #2c592c 100%);
+  border-bottom: 2px solid var(--gold-accent);
+}
+
+.admin-header {
+  background: linear-gradient(135deg, #183318 0%, #234923 100%);
+  border-bottom: 2px solid var(--gold-accent);
+}
+
+/* Radio chips selection animation */
+.chip-selector input:checked + label {
+  border-color: var(--forest-primary);
+  background-color: #f2f7f2;
+  color: var(--forest-primary);
+  box-shadow: 0 0 0 2px rgba(197, 146, 44, 0.35);
+}
+
+/* Drag and drop zone */
+.dropzone-active {
+  border-color: var(--forest-primary) !important;
+  background-color: #f2f7f2 !important;
+}
+
+/* Button variants */
+.btn-forest {
+  background-color: var(--forest-primary);
+  color: #ffffff;
+  border-bottom: 2px solid var(--gold-accent);
+  transition: all 0.2s ease-in-out;
+}
+.btn-forest:hover {
+  background-color: var(--forest-dark);
+  box-shadow: 0 4px 12px rgba(35, 73, 35, 0.25);
+}
+
+.btn-gold {
+  background-color: var(--gold-accent);
+  color: #ffffff;
+  transition: all 0.2s ease-in-out;
+}
+.btn-gold:hover {
+  background-color: #b08124;
+}
+
+.btn-ruby {
+  background-color: var(--ruby-alert);
+  color: #ffffff;
+  transition: all 0.2s ease-in-out;
+}
+.btn-ruby:hover {
+  background-color: var(--ruby-hover);
+}
+
+/* Badges */
+.badge-gold {
+  background-color: #fcf6e8;
+  color: #946914;
+  border: 1px solid rgba(197, 146, 44, 0.3);
+}
+
+.badge-forest {
+  background-color: #ebf3eb;
+  color: #234923;
+  border: 1px solid rgba(35, 73, 35, 0.2);
+}
+
+.badge-ruby {
+  background-color: #fef2f2;
+  color: #B31F24;
+  border: 1px solid rgba(179, 31, 36, 0.2);
+}
+
+/* Toast notifications */
+.toast-enter {
+  transform: translateY(-20px);
+  opacity: 0;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.toast-enter-active {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* Spinner */
+.spinner {
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: #ffffff;
+  width: 1.25rem;
+  height: 1.25rem;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
