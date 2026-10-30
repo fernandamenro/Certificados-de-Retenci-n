@@ -77,4 +77,10 @@ async function start() {
   }
 }
 
-start();
+// Export app for serverless platforms (e.g. Vercel)
+module.exports = app;
+
+// Only listen if executed directly (e.g. node server.js)
+if (require.main === module) {
+  start();
+}

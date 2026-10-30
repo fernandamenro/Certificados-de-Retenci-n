@@ -2,18 +2,22 @@ const fs = require('fs');
 const path = require('path');
 const config = require('../config');
 
-// Ensure data directory exists
-if (!fs.existsSync(config.DATA_DIR)) {
-  fs.mkdirSync(config.DATA_DIR, { recursive: true });
-}
-if (!fs.existsSync(config.UPLOADS_DIR)) {
-  fs.mkdirSync(config.UPLOADS_DIR, { recursive: true });
+// Ensure data directory exists (handled safely for serverless environments)
+try {
+  if (!fs.existsSync(config.DATA_DIR)) {
+    fs.mkdirSync(config.DATA_DIR, { recursive: true });
+  }
+  if (!fs.existsSync(config.UPLOADS_DIR)) {
+    fs.mkdirSync(config.UPLOADS_DIR, { recursive: true });
+  }
+} catch (e) {
+  // Silent fallback for read-only environments
 }
 
 // Initial empty state structure
 const defaultState = {
   agentConfig: {
-    razonSocial: 'Copropiedad Comercial Primavera Urbana Centro Comercial y Empresarial',
+    razonSocial: 'Primavera Urbana Centro Comercial y Empresarial',
     nit: '901003351',
     dv: '2',
     direccion: 'Calle 15 No. 40 - 01',
@@ -95,10 +99,14 @@ class JsonDB {
   }
 
   save(dataToSave = this.data) {
-    const tmpFile = `${this.filePath}.tmp`;
-    const serialized = JSON.stringify(dataToSave, null, 2);
-    fs.writeFileSync(tmpFile, serialized, 'utf8');
-    fs.renameSync(tmpFile, this.filePath);
+    try {
+      const tmpFile = `${this.filePath}.tmp`;
+      const serialized = JSON.stringify(dataToSave, null, 2);
+      fs.writeFileSync(tmpFile, serialized, 'utf8');
+      fs.renameSync(tmpFile, this.filePath);
+    } catch (err) {
+      console.warn('Advertencia al guardar archivo local (entorno de sólo lectura):', err.message);
+    }
   }
 
   // Agent Configuration

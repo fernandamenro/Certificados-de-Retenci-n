@@ -46,8 +46,8 @@ const App = {
   async loadPublicData() {
     try {
       const config = await API.getPublicConfig();
-      document.querySelectorAll('.cc-name').forEach(el => el.textContent = config.razonSocial || 'COPROPIEDAD COMERCIAL PRIMAVERA URBANA');
-      document.querySelectorAll('.cc-nit').forEach(el => el.textContent = `NIT: ${config.nit}-${config.dv}`);
+      document.querySelectorAll('.cc-name').forEach(el => el.textContent = config.razonSocial || 'PRIMAVERA URBANA CENTRO COMERCIAL Y EMPRESARIAL');
+      document.querySelectorAll('.cc-nit').forEach(el => el.textContent = `NIT: ${config.nit || '901003351'}-${config.dv || '2'}`);
       document.querySelectorAll('.cc-email').forEach(el => el.textContent = config.email || '');
       document.querySelectorAll('.cc-phone').forEach(el => el.textContent = config.telefono || '');
       
