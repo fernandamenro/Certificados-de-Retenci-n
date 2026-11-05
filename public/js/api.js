@@ -270,6 +270,26 @@ const API = {
     return result;
   },
 
+  async getMaestroTerceroById(id) {
+    const res = await fetch(`/api/admin/maestro-terceros/${encodeURIComponent(id)}`, {
+      headers: this.getHeaders()
+    });
+    const result = await res.json();
+    if (!res.ok) throw new Error(result.error || 'Error al obtener datos del tercero.');
+    return result;
+  },
+
+  async updateMaestroTercero(id, data) {
+    const res = await fetch(`/api/admin/maestro-terceros/${encodeURIComponent(id)}`, {
+      method: 'PUT',
+      headers: this.getHeaders(),
+      body: JSON.stringify(data)
+    });
+    const result = await res.json();
+    if (!res.ok) throw new Error(result.error || 'Error al actualizar tercero.');
+    return result;
+  },
+
   async deleteMaestroTercero(id) {
     const res = await fetch(`/api/admin/maestro-terceros/${encodeURIComponent(id)}`, {
       method: 'DELETE',

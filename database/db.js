@@ -395,6 +395,47 @@ class JsonDB {
     };
   }
 
+  getMaestroTerceroById(idOrNit) {
+    if (!this.data.maestroTerceros) return null;
+    const cleanParam = String(idOrNit).trim();
+    const cleanNit = cleanParam.replace(/\D/g, '');
+    return this.data.maestroTerceros.find(t => 
+      t.id === cleanParam || 
+      (cleanNit && String(t.normalizedNit).trim() === cleanNit)
+    ) || null;
+  }
+
+  updateMaestroTercero(idOrNit, updatedData) {
+    if (!this.data.maestroTerceros) this.data.maestroTerceros = [];
+    const cleanParam = String(idOrNit).trim();
+    const cleanNit = cleanParam.replace(/\D/g, '');
+
+    const index = this.data.maestroTerceros.findIndex(t => 
+      t.id === cleanParam || 
+      (cleanNit && String(t.normalizedNit).trim() === cleanNit)
+    );
+
+    if (index === -1) return null;
+
+    const current = this.data.maestroTerceros[index];
+    const newNit = updatedData.nit ? String(updatedData.nit).trim() : current.nit;
+    const cleanNewNit = newNit.replace(/\D/g, '');
+
+    const updatedRecord = {
+      ...current,
+      nit: newNit,
+      normalizedNit: cleanNewNit || current.normalizedNit,
+      razonSocial: updatedData.razonSocial ? String(updatedData.razonSocial).trim().toUpperCase() : current.razonSocial,
+      email: updatedData.email !== undefined ? String(updatedData.email).trim().toLowerCase() : current.email,
+      tipoTercero: updatedData.tipoTercero ? String(updatedData.tipoTercero).toLowerCase().trim() : current.tipoTercero,
+      updatedAt: new Date().toISOString()
+    };
+
+    this.data.maestroTerceros[index] = updatedRecord;
+    this.save();
+    return updatedRecord;
+  }
+
   deleteMaestroTercero(idOrNit) {
     if (!this.data.maestroTerceros) return false;
     const clean = String(idOrNit).replace(/\D/g, '').trim();

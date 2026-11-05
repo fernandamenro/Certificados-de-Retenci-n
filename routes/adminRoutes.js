@@ -281,6 +281,35 @@ router.post('/upload-maestro-terceros', excelUpload.single('file'), (req, res) =
   }
 });
 
+router.get('/maestro-terceros/:id', (req, res) => {
+  try {
+    const tercero = db.getMaestroTerceroById(req.params.id);
+    if (!tercero) {
+      return res.status(404).json({ error: 'Tercero no encontrado en el maestro.' });
+    }
+    res.json(tercero);
+  } catch (err) {
+    res.status(500).json({ error: 'Error al consultar tercero.' });
+  }
+});
+
+router.put('/maestro-terceros/:id', (req, res) => {
+  try {
+    const { nit, razonSocial, email, tipoTercero } = req.body;
+    if (!nit || !razonSocial) {
+      return res.status(400).json({ error: 'NIT y Razón Social / Nombre son obligatorios.' });
+    }
+    const updated = db.updateMaestroTercero(req.params.id, { nit, razonSocial, email, tipoTercero });
+    if (!updated) {
+      return res.status(404).json({ error: 'Tercero no encontrado en el maestro.' });
+    }
+    res.json({ message: 'Tercero actualizado exitosamente.', tercero: updated });
+  } catch (err) {
+    console.error('Error updating maestro tercero:', err);
+    res.status(500).json({ error: 'Error al actualizar información del tercero.' });
+  }
+});
+
 router.delete('/maestro-terceros/:id', (req, res) => {
   try {
     const deleted = db.deleteMaestroTercero(req.params.id);

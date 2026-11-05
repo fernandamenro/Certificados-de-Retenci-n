@@ -1059,6 +1059,7 @@ const App = {
 
     try {
       const data = await API.getMaestroTerceros({ search, tipo, limit: 100 });
+      this.currentMaestroItems = data.items || [];
       const tbody = document.getElementById('maestro-table-body');
       if (!tbody) return;
       tbody.innerHTML = '';
@@ -1099,10 +1100,17 @@ const App = {
                 ${t.tipoTercero.toUpperCase()}
               </span>
             </td>
-            <td class="p-3 text-right">
-              <button onclick="App.handleDeleteMaestroTercero('${t.id || t.normalizedNit}')" class="text-rose-600 hover:text-rose-800 font-semibold text-xs">
-                Eliminar
-              </button>
+            <td class="p-3 text-right whitespace-nowrap">
+              <div class="inline-flex items-center justify-end gap-1.5">
+                <button onclick="App.openEditTerceroModal('${t.id || t.normalizedNit}')" title="Modificar información" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-[#ebf3eb] hover:bg-[#d8ebd8] text-[#234923] font-semibold text-xs transition border border-[#234923]/20 shadow-2xs">
+                  <svg class="w-3.5 h-3.5 text-[#234923]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                  Modificar
+                </button>
+                <button onclick="App.handleDeleteMaestroTercero('${t.id || t.normalizedNit}')" title="Eliminar del Maestro" class="inline-flex items-center gap-1 px-2 py-1 rounded-md text-rose-600 hover:text-rose-800 hover:bg-rose-50 font-semibold text-xs transition">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                  Eliminar
+                </button>
+              </div>
             </td>
           `;
           tbody.appendChild(tr);
@@ -1173,6 +1181,56 @@ const App = {
       this.loadMaestroTerceros();
     } catch (err) {
       this.showToast(err.message || 'Error al guardar tercero.', 'error');
+    }
+  },
+
+  openEditTerceroModal(id) {
+    const item = (this.currentMaestroItems || []).find(t => (t.id || t.normalizedNit) === id || t.nit === id || t.normalizedNit === id);
+    if (!item) {
+      this.showToast('No se encontró la información del tercero.', 'error');
+      return;
+    }
+
+    document.getElementById('edit-tercero-id').value = item.id || item.normalizedNit;
+    document.getElementById('edit-m-nit').value = item.nit || item.normalizedNit;
+    document.getElementById('edit-m-nombre').value = item.razonSocial || '';
+    document.getElementById('edit-m-email').value = item.email || '';
+    document.getElementById('edit-m-tipo').value = (item.tipoTercero || 'proveedor').toLowerCase();
+
+    document.getElementById('modal-edit-tercero').classList.remove('hidden');
+    setTimeout(() => document.getElementById('edit-m-nombre')?.focus(), 100);
+  },
+
+  closeEditTerceroModal() {
+    const modal = document.getElementById('modal-edit-tercero');
+    if (modal) modal.classList.add('hidden');
+  },
+
+  async handleUpdateTerceroSubmit(e) {
+    if (e) e.preventDefault();
+    const id = document.getElementById('edit-tercero-id').value;
+    const nit = document.getElementById('edit-m-nit').value.trim();
+    const razonSocial = document.getElementById('edit-m-nombre').value.trim();
+    const email = document.getElementById('edit-m-email').value.trim();
+    const tipoTercero = document.getElementById('edit-m-tipo').value;
+
+    if (!nit || !razonSocial) {
+      this.showToast('NIT y Razón Social / Nombre son campos obligatorios.', 'warning');
+      return;
+    }
+
+    const btn = document.getElementById('btn-save-edit-tercero');
+    if (btn) btn.disabled = true;
+
+    try {
+      const res = await API.updateMaestroTercero(id, { nit, razonSocial, email, tipoTercero });
+      this.showToast(res.message || 'Tercero actualizado exitosamente.', 'success');
+      this.closeEditTerceroModal();
+      this.loadMaestroTerceros();
+    } catch (err) {
+      this.showToast(err.message || 'Error al actualizar tercero.', 'error');
+    } finally {
+      if (btn) btn.disabled = false;
     }
   },
 
