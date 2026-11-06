@@ -57,7 +57,7 @@ function getNetworkIps() {
 async function start() {
   try {
     await seedDatabase();
-    app.listen(config.PORT, () => {
+    app.listen(config.PORT, '0.0.0.0', () => {
       const networkIps = getNetworkIps();
       const primaryIp = networkIps[0]?.ip || '127.0.0.1';
       console.log('================================================================');
