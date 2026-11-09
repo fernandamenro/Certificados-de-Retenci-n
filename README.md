@@ -13,6 +13,7 @@ El servidor se encuentra activo y escuchando en todas las interfaces de red (`0.
 - **Acceso por Red Local (Dirección IP):** [http://172.20.20.110:3000](http://172.20.20.110:3000)
 - **Acceso Local (Este equipo):** [http://localhost:3000](http://localhost:3000)
 - **Módulo Privado (Panel Contable Administrativo):** [http://172.20.20.110:3000#admin](http://172.20.20.110:3000#admin)
+- **Habilitación de Red Local (Firewall):** Incluye el script ejecutable `scripts/habilitar_firewall.bat` para autorizar el tráfico del puerto TCP 3000 en Windows Defender Firewall para todos los equipos de la red.
 - **Credenciales Iniciales de Administrador:**
   - **Usuario:** `admin`
   - **Contraseña:** `admin1234`
@@ -103,7 +104,9 @@ portal-certificados-tributarios/
 │   ├── numberToWords.js           # Conversor de valores a letras en pesos colombianos (COP)
 │   └── pdfTemplates/
 │       ├── retencionTemplate.js   # Certificados Renta, IVA, ICA (Art. 381 E.T., % Retención, Firma Autorizada)
-│       └── formulario220Template.js # Réplica oficial del Formulario 220 de la DIAN
+│       └── formulario220Template.js # Réplica oficial idéntica del Formulario 220 DIAN (Guía 2026, 1 sola página)
+├── scripts/
+│   └── habilitar_firewall.bat     # Script de configuración de regla de entrada en Firewall de Windows
 ├── middleware/
 │   ├── auth.js                    # Middleware de seguridad JWT para rutas /admin
 │   └── upload.js                  # Manejo de carga de archivos en memoria con Multer
